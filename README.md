@@ -77,39 +77,3 @@ npm run build
 # publish scoped package as public
 npm publish --access public
 ```
-
-CI Publishing (recommended)
-
-Use a GitHub Actions workflow and set `NPM_TOKEN` in repo secrets. Example workflow snippet (add file `.github/workflows/publish.yml`):
-
-```yaml
-name: Publish package
-on:
-  release:
-    types: [published]
-
-jobs:
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      - name: Install
-        run: pnpm install --frozen-lockfile
-      - name: Build
-        run: pnpm -w --filter @velora/sdk run build
-      - name: Publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          cd packages/velora-js
-          npm publish --access public
-```
-
-Contributing
-
-- Open a PR, add tests/examples. The package is MIT licensed.
-
-Questions or want me to add the GitHub Actions publish workflow now? I can add the workflow and a short `CONTRIBUTING.md` if you want.
