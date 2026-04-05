@@ -1,6 +1,3 @@
-# @velora/sdk
-
-Lightweight JavaScript/TypeScript SDK for interacting with the Velora Jobs API.
 
 # @velora/sdk
 
