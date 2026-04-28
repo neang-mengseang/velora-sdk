@@ -9,7 +9,11 @@
     "moduleResolution": "node",
     "outDir": "dist",
     "rootDir": "src",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@rimora/velora": ["./src/index.ts"]
+    }
   },
   "include": ["src/**/*"]
 }

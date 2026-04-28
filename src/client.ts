@@ -6,6 +6,10 @@ import type {
   JobUpdatePayload,
   JobListParams,
   JobListResponse,
+  JobBulkGetPayload,
+  JobBulkGetResponse,
+  JobBatchResumePayload,
+  JobBatchResumeResponse,
   JobRunListResponse,
   Usage,
   Plan,
@@ -17,7 +21,9 @@ import type {
 } from './types';
 import { VeloraError } from './types';
 
-export const DEFAULT_BASE_URL = 'https://velora-api.psalinks.com';
+export { VeloraError } from './types';
+
+export const DEFAULT_BASE_URL = 'https://api.velora.dev';
 
 function buildUrl(base: string, path: string) {
   return base.replace(/\/$/, '') + '/' + path.replace(/^\//, '');
@@ -63,6 +69,10 @@ export class VeloraClient {
   }
 
   async getJob(id: string): Promise<Job> { return this.request(`/api/v1/jobs/${id}`, { method: 'GET' }); }
+
+  async bulkGetJobs(payload: JobBulkGetPayload): Promise<JobBulkGetResponse> {
+    return this.request('/api/v1/jobs/bulk', { method: 'POST', body: JSON.stringify(payload) });
+  }
   async createJob(payload: JobCreatePayload): Promise<CreateJobResponse> { return this.request('/api/v1/jobs', { method: 'POST', body: JSON.stringify(payload) }); }
   async updateJob(id: string, payload: JobUpdatePayload): Promise<SimpleResponse> { return this.request(`/api/v1/jobs/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }); }
   async deleteJob(id: string): Promise<SimpleResponse> { return this.request(`/api/v1/jobs/${id}`, { method: 'DELETE' }); }
@@ -71,6 +81,9 @@ export class VeloraClient {
   async regenerateWebhookSecret(id: string): Promise<RegenerateWebhookSecretResponse> { return this.request(`/api/v1/jobs/${id}/regenerate-webhook-secret`, { method: 'POST' }); }
   async pauseJob(id: string): Promise<SimpleResponse> { return this.request(`/api/v1/jobs/${id}/pause`, { method: 'POST' }); }
   async resumeJob(id: string): Promise<SimpleResponse> { return this.request(`/api/v1/jobs/${id}/resume`, { method: 'POST' }); }
+  async batchResumeJobs(payload: JobBatchResumePayload): Promise<JobBatchResumeResponse> {
+    return this.request('/api/v1/jobs/resume/batch', { method: 'POST', body: JSON.stringify(payload) });
+  }
 
   async listJobRuns(id: string, params?: { limit?: number; offset?: number }): Promise<JobRunListResponse> {
     const qp = new URLSearchParams();

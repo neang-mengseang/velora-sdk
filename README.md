@@ -70,8 +70,42 @@ await client.triggerWebhook('JOB_ID', body, { signature })
 ### Job management
 - `listJobs(params)` — paginated response: `{ jobs, total, limit, offset }`.
   - Supports filtering by `folder_path` to get jobs in a specific folder
+- `bulkGetJobs(payload)` — fetch multiple jobs by IDs in a single request: `{ jobs, total }`.
+  - Accepts `{ ids: string[] }` with maximum 100 IDs per request
 - `getJob(id)`, `createJob(payload)`, `updateJob(id,payload)`, `deleteJob(id)`.
-- `pauseJob(id)`, `resumeJob(id)`, `triggerJob(id)` — trigger for immediate execution.
+- `pauseJob(id)`, `wakeJob(id)`, `bulkWakeJobs(payload)`, `resumeJob(id)`, `triggerJob(id)` — trigger for immediate execution.
+
+### Bulk Fetch Jobs
+
+Fetch multiple jobs by their IDs in a single request:
+
+```ts
+// Fetch multiple specific jobs
+const result = await client.bulkGetJobs({
+  ids: ['job-id-1', 'job-id-2', 'job-id-3']
+})
+
+console.log(result.jobs) // Array of jobs
+console.log(result.total) // Number of jobs returned
+```
+
+**Note:** Maximum 100 IDs per request. Only jobs belonging to the authenticated owner are returned.
+
+### Bulk Wake Jobs
+
+Wake up multiple dead jobs in a single request:
+
+```ts
+// Wake up multiple dead jobs
+const result = await client.bulkWakeJobs({
+  ids: ['job-id-1', 'job-id-2', 'job-id-3']
+})
+
+console.log('Woken:', result.woken)
+console.log('Skipped:', result.skipped)
+```
+
+**Note:** Maximum 100 IDs per request. Only jobs with status "dead" will be woken up.
 
 ### Folder Organization
 

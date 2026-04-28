@@ -58,6 +58,28 @@ export interface JobListResponse {
   offset: number;
 }
 
+export interface JobBulkGetPayload {
+  ids: string[];
+}
+
+/** Server returns { jobs: Job[], total } */
+export interface JobBulkGetResponse {
+  jobs: Job[];
+  total: number;
+}
+
+export interface JobBatchResumePayload {
+  ids: string[];
+}
+
+/** Server returns { jobs: Job[], total, resumed, skipped } */
+export interface JobBatchResumeResponse {
+  jobs: Job[];
+  total: number;
+  resumed: number;
+  skipped: number;
+}
+
 export interface JobRun {
   id: string;
   job_id: string;
