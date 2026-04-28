@@ -73,7 +73,7 @@ await client.triggerWebhook('JOB_ID', body, { signature })
 - `bulkGetJobs(payload)` — fetch multiple jobs by IDs in a single request: `{ jobs, total }`.
   - Accepts `{ ids: string[] }` with maximum 100 IDs per request
 - `getJob(id)`, `createJob(payload)`, `updateJob(id,payload)`, `deleteJob(id)`.
-- `pauseJob(id)`, `wakeJob(id)`, `bulkWakeJobs(payload)`, `resumeJob(id)`, `triggerJob(id)` — trigger for immediate execution.
+- `pauseJob(id)`, `resumeJob(id)`, `batchResumeJobs(payload)`, `triggerJob(id)` — trigger for immediate execution.
 
 ### Bulk Fetch Jobs
 
@@ -91,21 +91,22 @@ console.log(result.total) // Number of jobs returned
 
 **Note:** Maximum 100 IDs per request. Only jobs belonging to the authenticated owner are returned.
 
-### Bulk Wake Jobs
+### Batch Resume Jobs
 
-Wake up multiple dead jobs in a single request:
+Resume multiple paused or dead jobs in a single request:
 
 ```ts
-// Wake up multiple dead jobs
-const result = await client.bulkWakeJobs({
+// Resume multiple jobs
+const result = await client.batchResumeJobs({
   ids: ['job-id-1', 'job-id-2', 'job-id-3']
 })
 
-console.log('Woken:', result.woken)
+console.log('Resumed:', result.resumed)
 console.log('Skipped:', result.skipped)
+console.log('Total:', result.total)
 ```
 
-**Note:** Maximum 100 IDs per request. Only jobs with status "dead" will be woken up.
+**Note:** Maximum 100 IDs per request. Only jobs with status "paused" or "dead" will be resumed. Jobs that are already active will be skipped.
 
 ### Folder Organization
 
