@@ -1,6 +1,6 @@
 {
   "name": "@rimora/velora",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Official TypeScript SDK for the Velora Jobs API",
   "main": "dist/index.js",
   "module": "dist/index.js",
