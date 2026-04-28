@@ -80,6 +80,42 @@ export interface JobBatchResumeResponse {
   skipped: number;
 }
 
+export interface JobBatchCreatePayload {
+  jobs: JobCreatePayload[];
+}
+
+/** Server returns { jobs: Job[], total, created, failed } */
+export interface JobBatchCreateResponse {
+  jobs: Job[];
+  total: number;
+  created: number;
+  failed: number;
+}
+
+export interface JobBatchUpdatePayload {
+  jobs: (JobUpdatePayload & { id: string })[];
+}
+
+/** Server returns { jobs: Job[], total, updated, failed } */
+export interface JobBatchUpdateResponse {
+  jobs: Job[];
+  total: number;
+  updated: number;
+  failed: number;
+}
+
+export interface JobBatchDeletePayload {
+  ids: string[];
+}
+
+/** Server returns { jobs: Job[], total, deleted, failed } */
+export interface JobBatchDeleteResponse {
+  jobs: Job[];
+  total: number;
+  deleted: number;
+  failed: number;
+}
+
 export interface JobRun {
   id: string;
   job_id: string;

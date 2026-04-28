@@ -72,6 +72,12 @@ await client.triggerWebhook('JOB_ID', body, { signature })
   - Supports filtering by `folder_path` to get jobs in a specific folder
 - `bulkGetJobs(payload)` — fetch multiple jobs by IDs in a single request: `{ jobs, total }`.
   - Accepts `{ ids: string[] }` with maximum 100 IDs per request
+- `batchCreateJobs(payload)` — create multiple jobs in a single request: `{ jobs, total, created, failed }`.
+  - Accepts `{ jobs: JobCreatePayload[] }` with maximum 100 jobs per request
+- `batchUpdateJobs(payload)` — update multiple jobs in a single request: `{ jobs, total, updated, failed }`.
+  - Accepts `{ jobs: (JobUpdatePayload & { id: string })[] }` with maximum 100 jobs per request
+- `batchDeleteJobs(payload)` — delete multiple jobs in a single request: `{ jobs, total, deleted, failed }`.
+  - Accepts `{ ids: string[] }` with maximum 100 IDs per request
 - `getJob(id)`, `createJob(payload)`, `updateJob(id,payload)`, `deleteJob(id)`.
 - `pauseJob(id)`, `resumeJob(id)`, `batchResumeJobs(payload)`, `triggerJob(id)` — trigger for immediate execution.
 
@@ -107,6 +113,63 @@ console.log('Total:', result.total)
 ```
 
 **Note:** Maximum 100 IDs per request. Only jobs with status "paused" or "dead" will be resumed. Jobs that are already active will be skipped.
+
+### Batch Create Jobs
+
+Create multiple jobs in a single request:
+
+```ts
+// Create multiple jobs
+const result = await client.batchCreateJobs({
+  jobs: [
+    { target_url: 'https://example.com/hook1', schedule_cron: '0 9 * * *' },
+    { target_url: 'https://example.com/hook2', schedule_cron: '0 10 * * *' }
+  ]
+})
+
+console.log('Created:', result.created)
+console.log('Failed:', result.failed)
+console.log('Total:', result.total)
+```
+
+**Note:** Maximum 100 jobs per request. Subject to your plan's job limit. Jobs that fail validation will be skipped.
+
+### Batch Update Jobs
+
+Update multiple jobs in a single request:
+
+```ts
+// Update multiple jobs
+const result = await client.batchUpdateJobs({
+  jobs: [
+    { id: 'job-id-1', name: 'Updated Name' },
+    { id: 'job-id-2', schedule_cron: '0 8 * * *' }
+  ]
+})
+
+console.log('Updated:', result.updated)
+console.log('Failed:', result.failed)
+console.log('Total:', result.total)
+```
+
+**Note:** Maximum 100 jobs per request. Each job must include an id. Jobs that don't exist will be skipped.
+
+### Batch Delete Jobs
+
+Delete multiple jobs in a single request:
+
+```ts
+// Delete multiple jobs
+const result = await client.batchDeleteJobs({
+  ids: ['job-id-1', 'job-id-2']
+})
+
+console.log('Deleted:', result.deleted)
+console.log('Failed:', result.failed)
+console.log('Total:', result.total)
+```
+
+**Note:** Maximum 100 IDs per request. This operation is irreversible - it deletes jobs and all associated job runs. Jobs that don't exist will be skipped.
 
 ### Folder Organization
 

@@ -10,6 +10,12 @@ import type {
   JobBulkGetResponse,
   JobBatchResumePayload,
   JobBatchResumeResponse,
+  JobBatchCreatePayload,
+  JobBatchCreateResponse,
+  JobBatchUpdatePayload,
+  JobBatchUpdateResponse,
+  JobBatchDeletePayload,
+  JobBatchDeleteResponse,
   JobRunListResponse,
   Usage,
   Plan,
@@ -83,6 +89,15 @@ export class VeloraClient {
   async resumeJob(id: string): Promise<SimpleResponse> { return this.request(`/api/v1/jobs/${id}/resume`, { method: 'POST' }); }
   async batchResumeJobs(payload: JobBatchResumePayload): Promise<JobBatchResumeResponse> {
     return this.request('/api/v1/jobs/resume/batch', { method: 'POST', body: JSON.stringify(payload) });
+  }
+  async batchCreateJobs(payload: JobBatchCreatePayload): Promise<JobBatchCreateResponse> {
+    return this.request('/api/v1/jobs/batch', { method: 'POST', body: JSON.stringify(payload) });
+  }
+  async batchUpdateJobs(payload: JobBatchUpdatePayload): Promise<JobBatchUpdateResponse> {
+    return this.request('/api/v1/jobs/batch', { method: 'PATCH', body: JSON.stringify(payload) });
+  }
+  async batchDeleteJobs(payload: JobBatchDeletePayload): Promise<JobBatchDeleteResponse> {
+    return this.request('/api/v1/jobs/batch', { method: 'DELETE', body: JSON.stringify(payload) });
   }
 
   async listJobRuns(id: string, params?: { limit?: number; offset?: number }): Promise<JobRunListResponse> {
